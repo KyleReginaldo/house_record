@@ -10,6 +10,7 @@ import 'package:house_record/domain/usecase/login.dart';
 import 'package:house_record/domain/usecase/logout.dart';
 import 'package:house_record/domain/usecase/register.dart';
 import 'package:house_record/domain/usecase/search_payment.dart';
+import 'package:house_record/domain/usecase/update_house.dart';
 
 part 'house_state.dart';
 
@@ -22,6 +23,7 @@ class HouseCubit extends Cubit<HouseState> {
     this._logOut,
     this._addUser,
     this._register,
+    this._updateHouse,
   ) : super(HouseInitial());
 
   final GetHouses _getHouses;
@@ -31,6 +33,11 @@ class HouseCubit extends Cubit<HouseState> {
   final LogOut _logOut;
   final AddUser _addUser;
   final Register _register;
+  final UpdateHouse _updateHouse;
+
+  void updateHouse(String uid, HouseRecordEntity house) async {
+    await _updateHouse(uid, house);
+  }
 
   void add(HouseRecordEntity house) async {
     await _addHouseData(house);

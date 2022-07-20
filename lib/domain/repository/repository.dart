@@ -9,4 +9,5 @@ abstract class Repository {
   Future<void> logOut();
   Future<void> addUser(UserEntity user);
   Future<void> register(String email, String password);
+  Future<void> updateHouse(String uid, HouseRecordEntity house);
 }

@@ -4,7 +4,7 @@ import 'package:general/general.dart';
 import 'package:house_record/presentation/cubit/house_cubit.dart';
 import 'package:house_record/presentation/screens/detailscreen.dart';
 import 'package:house_record/presentation/screens/searchscreen.dart';
-import 'package:house_record/presentation/widgets/components/add_dialog.dart';
+import 'package:house_record/presentation/widgets/add_dialog.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/teenyicons.dart';
 
@@ -69,7 +69,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => DetailScreen(record: e)));
+                                builder: (context) => BlocProvider<HouseCubit>(
+                                      create: (context) => sl<HouseCubit>(),
+                                      child: DetailScreen(
+                                        record: e,
+                                        uid: e.uid,
+                                      ),
+                                    )));
                       },
                       tileColor: color2,
                       textColor: color4,

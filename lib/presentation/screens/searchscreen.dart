@@ -5,6 +5,8 @@ import 'package:house_record/core/theme/colors.dart';
 import 'package:house_record/presentation/cubit/house_cubit.dart';
 import 'package:house_record/presentation/screens/detailscreen.dart';
 
+import '../../dependency.dart';
+
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
@@ -37,7 +39,9 @@ class _SearchScreenState extends State<SearchScreen> {
           radius: 0,
           color: color3,
           onChanged: (value) {
-            context.read<HouseCubit>().searchPayment(value);
+            if (value.isNotEmpty) {
+              context.read<HouseCubit>().searchPayment(value);
+            }
           },
         ),
       ),
@@ -51,7 +55,13 @@ class _SearchScreenState extends State<SearchScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => DetailScreen(record: house)));
+                            builder: (context) => BlocProvider<HouseCubit>(
+                                  create: (context) => sl<HouseCubit>(),
+                                  child: DetailScreen(
+                                    record: house,
+                                    uid: house.uid,
+                                  ),
+                                )));
                   },
                   tileColor: color2,
                   textColor: color4,

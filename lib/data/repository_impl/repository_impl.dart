@@ -55,4 +55,9 @@ class RepositoryImpl implements Repository {
   Future<void> register(String email, String password) async {
     await remote.register(email, password);
   }
+
+  @override
+  Future<void> updateHouse(String uid, HouseRecordEntity house) async {
+    await remote.updateHouse(uid, HouseRecordModel.fromEntity(house));
+  }
 }

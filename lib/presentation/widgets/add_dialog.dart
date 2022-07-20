@@ -6,8 +6,8 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/entity/house_record_entity.dart';
-import '../../cubit/house_cubit.dart';
+import '../../domain/entity/house_record_entity.dart';
+import '../cubit/house_cubit.dart';
 
 class AddDialog extends StatefulWidget {
   const AddDialog({Key? key}) : super(key: key);
@@ -45,10 +45,11 @@ class _AddDialogState extends State<AddDialog> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
           child: CustomTextField(
-            'payment number',
+            'OR number',
             controller: paymentNumber,
             keyboard: TextInputType.number,
             color: color4,
+            radius: 0,
           ),
         ),
         Padding(
@@ -58,6 +59,7 @@ class _AddDialogState extends State<AddDialog> {
             controller: date,
             defaultData: date.text,
             color: color4,
+            radius: 0,
           ),
         ),
         Padding(
@@ -66,6 +68,7 @@ class _AddDialogState extends State<AddDialog> {
             'owner',
             controller: owner,
             color: color4,
+            radius: 0,
           ),
         ),
         Padding(
@@ -75,6 +78,7 @@ class _AddDialogState extends State<AddDialog> {
             controller: amount,
             keyboard: TextInputType.number,
             color: color4,
+            radius: 0,
           ),
         ),
         Padding(
@@ -83,6 +87,7 @@ class _AddDialogState extends State<AddDialog> {
             'coveredMonth',
             controller: coveredMonth,
             color: color4,
+            radius: 0,
           ),
         ),
         Padding(
@@ -91,6 +96,7 @@ class _AddDialogState extends State<AddDialog> {
             'address',
             controller: address,
             color: color4,
+            radius: 0,
           ),
         ),
         Row(

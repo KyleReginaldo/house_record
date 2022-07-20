@@ -29,13 +29,16 @@ class _LogINState extends State<LogInScreen> {
       if (element.data()?['email'] == email.text &&
           element.data()?['password'] == password.text) {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider<HouseCubit>(
-                create: (context) => sl<HouseCubit>()..getHouses(),
-                child: const HomeScreen(),
-              ),
-            ));
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider<HouseCubit>(
+              create: (context) => sl<HouseCubit>()..getHouses(),
+              child: const HomeScreen(),
+            ),
+          ),
+        );
+        email.clear();
+        password.clear();
       } else {
         context.read<HouseCubit>().logIn(email.text, password.text);
       }
@@ -50,6 +53,15 @@ class _LogINState extends State<LogInScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'assets/houselogo.png',
+              height: 80,
+            ),
+            const CustomText(
+              'HOUSE RECORD',
+              color: color4,
+            ),
+            addVerticalSpace(20),
             CustomTextField(
               'email',
               controller: email,

@@ -9,13 +9,14 @@ import 'package:house_record/domain/usecase/login.dart';
 import 'package:house_record/domain/usecase/logout.dart';
 import 'package:house_record/domain/usecase/register.dart';
 import 'package:house_record/domain/usecase/search_payment.dart';
+import 'package:house_record/domain/usecase/update_house.dart';
 import 'package:house_record/presentation/cubit/house_cubit.dart';
 
 final sl = GetIt.instance;
 
 Future init() async {
   sl.registerFactory(
-      () => HouseCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+      () => HouseCubit(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerLazySingleton(() => GetHouses(repo: sl()));
   sl.registerLazySingleton(() => AddHouseData(repo: sl()));
   sl.registerLazySingleton(() => SearchPayment(repo: sl()));
@@ -24,6 +25,7 @@ Future init() async {
   sl.registerLazySingleton(() => LogOut(repo: sl()));
   sl.registerLazySingleton(() => AddUser(repo: sl()));
   sl.registerLazySingleton(() => Register(repo: sl()));
+  sl.registerLazySingleton(() => UpdateHouse(repo: sl()));
 
   sl.registerLazySingleton<Repository>(() => RepositoryImpl(remote: sl()));
 

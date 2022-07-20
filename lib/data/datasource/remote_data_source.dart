@@ -11,6 +11,7 @@ abstract class RemoteDataSource {
   Future<void> logOut();
   Future<void> addUser(UserModel user);
   Future<void> register(String email, String password);
+  Future<void> updateHouse(String uid, HouseRecordModel house);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -67,5 +68,12 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   Future<void> register(String email, String password) async {
     await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
+  }
+
+  @override
+  Future<void> updateHouse(String uid, HouseRecordModel house) async {
+    final docHouse = FirebaseFirestore.instance.collection('houses').doc(uid);
+    house.uid = docHouse.id;
+    await docHouse.update(house.toMap());
   }
 }
