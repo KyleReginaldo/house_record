@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:general/general.dart';
-import 'package:house_record/presentation/cubit/house_cubit.dart';
-import 'package:house_record/presentation/screens/detailscreen.dart';
-import 'package:house_record/presentation/screens/searchscreen.dart';
-import 'package:house_record/presentation/widgets/add_dialog.dart';
+import 'package:house_record/presentation/cubit/getrole_cubit.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/teenyicons.dart';
 
+import 'package:house_record/presentation/cubit/house_cubit.dart';
+import 'package:house_record/presentation/screens/searchscreen.dart';
+import 'package:house_record/presentation/screens/houselist_screen.dart';
+
 import '../../core/theme/colors.dart';
 import '../../dependency.dart';
+import '../widgets/add_dialog.dart';
+
+//Lagay mo to later sa global variable
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
+  const HomeScreen({
+    Key? key,
+  }) : super(key: key);
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -23,7 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText('HOUSE RECORD'),
+        title: const CustomText(
+          'HOUSE RECORD',
+          letterSpacing: 2,
+          size: 15,
+          weight: FontWeight.bold,
+          color: color1,
+        ),
         elevation: 0,
         leading: Image.asset(
           'assets/logo.png',
@@ -41,82 +52,179 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             icon: const Iconify(
               Teenyicons.search_property_outline,
-              color: color4,
+              color: color3,
             ),
           ),
           IconButton(
             onPressed: () async {
-              Navigator.pop(context);
+              context.read<HouseCubit>().logOut();
               // context.read<HouseCubit>().logOut();
             },
             icon: const Icon(
               Icons.logout_outlined,
-              color: color4,
+              color: color3,
             ),
           ),
         ],
       ),
-      body: BlocBuilder<HouseCubit, HouseState>(
-        builder: (context, state) {
-          if (state is Loaded) {
-            return SingleChildScrollView(
-              child: Column(
-                children: state.houses.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 4, top: 10),
-                    child: ListTile(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BlocProvider<HouseCubit>(
-                                      create: (context) => sl<HouseCubit>(),
-                                      child: DetailScreen(
-                                        record: e,
-                                        uid: e.uid,
-                                      ),
-                                    )));
-                      },
-                      tileColor: color2,
-                      textColor: color4,
-                      title: CustomText(e.ownerName),
-                      subtitle: CustomText(e.address),
-                      trailing: CustomText(e.coveredMonth),
-                    ),
-                  );
-                }).toList(),
+      body: GridView.count(
+        padding: const EdgeInsets.all(8),
+        crossAxisCount: 2,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        children: [
+          InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider<HouseCubit>(
+                  create: (context) => sl<HouseCubit>()..getHouses('phase 1'),
+                  child: const HouseListScreen(),
+                ),
               ),
-            );
-          } else if (state is Empty) {
-            return const Align(
-              alignment: Alignment.center,
-              child: CustomText(
-                'Empty',
-                color: Colors.grey,
-                size: 25,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: color3,
+                borderRadius: BorderRadius.circular(8),
+                image: const DecorationImage(
+                  image: AssetImage('assets/phase1.jpg'),
+                  fit: BoxFit.cover,
+                  opacity: 0.8,
+                ),
               ),
-            );
-          } else if (state is Loading) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: color4,
+              child: const Center(
+                child: CustomText(
+                  'PHASE 1',
+                  weight: FontWeight.bold,
+                  letterSpacing: 5,
+                  size: 20,
+                  color: color2,
+                ),
               ),
-            );
-          }
-          return const SizedBox.shrink();
-        },
+            ),
+          ),
+          InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider<HouseCubit>(
+                  create: (context) => sl<HouseCubit>()..getHouses('phase 2'),
+                  child: const HouseListScreen(),
+                ),
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: color3,
+                borderRadius: BorderRadius.circular(8),
+                image: const DecorationImage(
+                  image: AssetImage('assets/phase2.jpg'),
+                  fit: BoxFit.cover,
+                  opacity: 0.8,
+                ),
+              ),
+              child: const Center(
+                child: CustomText(
+                  'PHASE 2',
+                  weight: FontWeight.bold,
+                  letterSpacing: 5,
+                  size: 20,
+                  color: color2,
+                ),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider<HouseCubit>(
+                  create: (context) => sl<HouseCubit>()..getHouses('phase 2a'),
+                  child: const HouseListScreen(),
+                ),
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: color3,
+                borderRadius: BorderRadius.circular(8),
+                image: const DecorationImage(
+                  image: AssetImage('assets/phase2a.jpg'),
+                  fit: BoxFit.cover,
+                  opacity: 0.8,
+                ),
+              ),
+              child: const Center(
+                child: CustomText(
+                  'PHASE 2a',
+                  weight: FontWeight.bold,
+                  letterSpacing: 5,
+                  size: 20,
+                  color: color2,
+                ),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider<HouseCubit>(
+                  create: (context) => sl<HouseCubit>()..getHouses('phase 2b'),
+                  child: const HouseListScreen(),
+                ),
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: color3,
+                borderRadius: BorderRadius.circular(8),
+                image: const DecorationImage(
+                  image: AssetImage('assets/phase2b.jpg'),
+                  fit: BoxFit.cover,
+                  opacity: 0.8,
+                ),
+              ),
+              child: const Center(
+                child: CustomText(
+                  'PHASE 2b',
+                  weight: FontWeight.bold,
+                  letterSpacing: 5,
+                  size: 20,
+                  color: color2,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: color5,
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) => BlocProvider<HouseCubit>(
+      floatingActionButton: BlocBuilder<GetRoleCubit, UserState>(
+        builder: (context, state) {
+          if (state is Admin) {
+            return FloatingActionButton(
+              backgroundColor: color1,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => BlocProvider<HouseCubit>(
                     create: (context) => sl<HouseCubit>(),
                     child: const AddDialog(),
-                  ));
+                  ),
+                );
+              },
+              tooltip: 'Add Record',
+              splashColor: color1,
+              child: const Icon(
+                Icons.add_home_outlined,
+                color: color3,
+                size: 35,
+              ),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
         },
-        child: const Icon(Icons.add),
       ),
     );
   }

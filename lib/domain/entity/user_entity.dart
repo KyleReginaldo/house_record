@@ -1,12 +1,10 @@
 class UserEntity {
-  String uid;
   final String email;
   final String password;
-  final bool isAdmin;
+  final String role;
   UserEntity({
-    this.uid = '',
     required this.email,
     required this.password,
-    required this.isAdmin,
+    required this.role,
   });
 }

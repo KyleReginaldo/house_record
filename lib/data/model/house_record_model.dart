@@ -15,6 +15,8 @@ class HouseRecordModel extends HouseRecordEntity {
   final String coveredMonth;
   @override
   final String address;
+  @override
+  final String phase;
   HouseRecordModel({
     this.uid = '',
     required this.paymentNumber,
@@ -23,6 +25,7 @@ class HouseRecordModel extends HouseRecordEntity {
     required this.amount,
     required this.coveredMonth,
     required this.address,
+    required this.phase,
   }) : super(
           paymentNumber: paymentNumber,
           date: date,
@@ -30,6 +33,7 @@ class HouseRecordModel extends HouseRecordEntity {
           amount: amount,
           coveredMonth: coveredMonth,
           address: address,
+          phase: phase,
         );
   factory HouseRecordModel.fromMap(Map<String, dynamic> map) {
     return HouseRecordModel(
@@ -40,6 +44,7 @@ class HouseRecordModel extends HouseRecordEntity {
       amount: map['amount'] ?? "",
       coveredMonth: map['coveredMonth'] ?? "",
       address: map['address'],
+      phase: map['phase'],
     );
   }
   factory HouseRecordModel.fromEntity(HouseRecordEntity house) {
@@ -51,6 +56,7 @@ class HouseRecordModel extends HouseRecordEntity {
       amount: house.amount,
       coveredMonth: house.coveredMonth,
       address: house.address,
+      phase: house.phase,
     );
   }
   Map<String, dynamic> toMap() => {
@@ -61,5 +67,6 @@ class HouseRecordModel extends HouseRecordEntity {
         'amount': amount,
         'coveredMonth': coveredMonth,
         'address': address,
+        'phase': phase,
       };
 }

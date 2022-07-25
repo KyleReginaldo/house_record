@@ -7,7 +7,7 @@ class GetHouses {
     required this.repo,
   });
 
-  Stream<List<HouseRecordEntity>> call() {
-    return repo.getHouses();
+  Stream<List<HouseRecordEntity>> call(String phase) {
+    return repo.getHouses(phase);
   }
 }

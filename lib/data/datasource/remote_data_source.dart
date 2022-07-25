@@ -5,13 +5,14 @@ import 'package:house_record/data/model/user_model.dart';
 
 abstract class RemoteDataSource {
   Future<void> addHouseData(HouseRecordModel house);
-  Stream<List<HouseRecordModel>> getHouses();
+  Stream<List<HouseRecordModel>> getHouses(String phase);
   Stream<List<HouseRecordModel>> searchPayment(String address);
   Future<void> logIn(String email, String password);
   Future<void> logOut();
   Future<void> addUser(UserModel user);
   Future<void> register(String email, String password);
   Future<void> updateHouse(String uid, HouseRecordModel house);
+  Future<UserModel> getUserInFirestore(String email);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -23,10 +24,10 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   }
 
   @override
-  Stream<List<HouseRecordModel>> getHouses() {
+  Stream<List<HouseRecordModel>> getHouses(String phase) {
     return FirebaseFirestore.instance
         .collection('houses')
-        .orderBy('date', descending: true)
+        .where('phase', isEqualTo: phase)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => HouseRecordModel.fromMap(doc.data()))
@@ -37,9 +38,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   Stream<List<HouseRecordModel>> searchPayment(String address) {
     return FirebaseFirestore.instance
         .collection('houses')
-        .where('address',
-            isGreaterThanOrEqualTo: address.toLowerCase(),
-            isLessThan: '${address.toLowerCase()}z')
+        .where('address', isEqualTo: address.toLowerCase())
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => HouseRecordModel.fromMap(doc.data()))
@@ -60,7 +59,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<void> addUser(UserModel user) async {
     final userDoc = FirebaseFirestore.instance.collection('users').doc();
-    user.uid = userDoc.id;
     await userDoc.set(user.toMap());
   }
 
@@ -75,5 +73,13 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     final docHouse = FirebaseFirestore.instance.collection('houses').doc(uid);
     house.uid = docHouse.id;
     await docHouse.update(house.toMap());
+  }
+
+  @override
+  Future<UserModel> getUserInFirestore(String email) async {
+    final userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(email).get();
+
+    return UserModel.fromMap(userDoc.data() ?? {'': ''});
   }
 }

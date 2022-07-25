@@ -23,7 +23,17 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: color1,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: color3,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const CustomText(
@@ -35,152 +45,177 @@ class DetailScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: CustomText(
-                record.ownerName.toUpperCase(),
-                weight: FontWeight.bold,
-                color: color4,
-                size: 20,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: CustomText(
+                  record.ownerName.toUpperCase(),
+                  weight: FontWeight.bold,
+                  color: color3,
+                  size: 20,
+                ),
               ),
-            ),
-            addVerticalSpace(16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const CustomText(
-                  'payment number',
-                  color: color4,
-                ),
-                CustomText(
-                  record.paymentNumber,
-                  color: color4,
-                ),
-              ],
-            ),
-            addVerticalSpace(16),
-            const HDivider(
-              splitter: 40,
-              isDot: true,
-              color: color3,
-            ),
-            addVerticalSpace(16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const CustomText(
-                  'amount',
-                  color: color4,
-                ),
-                CustomText(
-                  NumberFormat.currency(
-                          locale: 'fil', symbol: '₱', decimalDigits: 2)
-                      .format(
-                    double.parse(record.amount),
-                  ),
-                  color: color4,
-                ),
-              ],
-            ),
-            addVerticalSpace(16),
-            const HDivider(
-              splitter: 40,
-              isDot: true,
-              color: color3,
-            ),
-            addVerticalSpace(16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const CustomText(
-                  'address',
-                  color: color4,
-                ),
-                CustomText(
-                  record.address.toUpperCase(),
-                  color: color4,
-                ),
-              ],
-            ),
-            addVerticalSpace(16),
-            const HDivider(
-              splitter: 40,
-              isDot: true,
-              color: color3,
-            ),
-            addVerticalSpace(16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const CustomText(
-                  'covered month',
-                  color: color4,
-                ),
-                CustomText(
-                  record.coveredMonth.toUpperCase(),
-                  color: color4,
-                ),
-              ],
-            ),
-            addVerticalSpace(16),
-            const HDivider(
-              splitter: 40,
-              isDot: true,
-              color: color3,
-            ),
-            addVerticalSpace(16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const CustomText(
-                  'date',
-                  color: color4,
-                ),
-                CustomText(
-                  record.date,
-                  color: color4,
-                ),
-              ],
-            ),
-            addVerticalSpace(16),
-            const HDivider(
-              splitter: 40,
-              isDot: true,
-              color: color3,
-            ),
-            addVerticalSpace(16),
-            Align(
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => BlocProvider<HouseCubit>(
-                            create: (context) => sl<HouseCubit>(),
-                            child: UpdateDialog(
-                              uid: uid,
-                              house: record,
-                            ),
-                          ));
-                },
-                child: Container(
-                  decoration: const BoxDecoration(
+              addVerticalSpace(16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomText(
+                    'payment number',
                     color: color3,
                   ),
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 25),
-                    child: CustomBtnText(
-                      'Update',
+                  CustomText(
+                    record.paymentNumber,
+                    color: color3,
+                  ),
+                ],
+              ),
+              addVerticalSpace(16),
+              const HDivider(
+                splitter: 40,
+                isDot: true,
+                color: color3,
+              ),
+              addVerticalSpace(16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomText(
+                    'amount',
+                    color: color3,
+                  ),
+                  CustomText(
+                    NumberFormat.currency(
+                            locale: 'fil', symbol: '₱', decimalDigits: 2)
+                        .format(
+                      double.parse(record.amount),
+                    ),
+                    color: color3,
+                  ),
+                ],
+              ),
+              addVerticalSpace(16),
+              const HDivider(
+                splitter: 40,
+                isDot: true,
+                color: color3,
+              ),
+              addVerticalSpace(16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomText(
+                    'address',
+                    color: color3,
+                  ),
+                  CustomText(
+                    record.address.toUpperCase(),
+                    color: color3,
+                  ),
+                ],
+              ),
+              addVerticalSpace(16),
+              const HDivider(
+                splitter: 40,
+                isDot: true,
+                color: color3,
+              ),
+              addVerticalSpace(16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomText(
+                    'covered month',
+                    color: color3,
+                  ),
+                  CustomText(
+                    record.coveredMonth.toUpperCase(),
+                    color: color3,
+                  ),
+                ],
+              ),
+              addVerticalSpace(16),
+              const HDivider(
+                splitter: 40,
+                isDot: true,
+                color: color3,
+              ),
+              addVerticalSpace(16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomText(
+                    'date',
+                    color: color3,
+                  ),
+                  CustomText(
+                    record.date,
+                    color: color3,
+                  ),
+                ],
+              ),
+              addVerticalSpace(16),
+              const HDivider(
+                splitter: 40,
+                isDot: true,
+                color: color3,
+              ),
+              addVerticalSpace(16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CustomText(
+                    'phase',
+                    color: color3,
+                  ),
+                  CustomText(
+                    record.phase,
+                    color: color3,
+                  ),
+                ],
+              ),
+              addVerticalSpace(16),
+              const HDivider(
+                splitter: 40,
+                isDot: true,
+                color: color3,
+              ),
+              addVerticalSpace(16),
+              Align(
+                alignment: Alignment.center,
+                child: GestureDetector(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => BlocProvider<HouseCubit>(
+                              create: (context) => sl<HouseCubit>(),
+                              child: UpdateDialog(
+                                uid: uid,
+                                house: record,
+                              ),
+                            ));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: color1,
+                      border: Border.all(color: color3, width: 1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 40),
+                      child: CustomBtnText(
+                        'Update',
+                        color: color3,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

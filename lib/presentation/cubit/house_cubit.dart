@@ -2,10 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 import 'package:house_record/domain/entity/house_record_entity.dart';
+import 'package:house_record/domain/entity/suggestion_entity.dart';
 import 'package:house_record/domain/entity/user_entity.dart';
 import 'package:house_record/domain/usecase/add_house_data.dart';
+import 'package:house_record/domain/usecase/add_suggestion.dart';
 import 'package:house_record/domain/usecase/add_user.dart';
 import 'package:house_record/domain/usecase/get_houses.dart';
+import 'package:house_record/domain/usecase/getuser_infirestore.dart';
 import 'package:house_record/domain/usecase/login.dart';
 import 'package:house_record/domain/usecase/logout.dart';
 import 'package:house_record/domain/usecase/register.dart';
@@ -24,6 +27,8 @@ class HouseCubit extends Cubit<HouseState> {
     this._addUser,
     this._register,
     this._updateHouse,
+    this._addSuggestion,
+    this._getUserInFirestore,
   ) : super(HouseInitial());
 
   final GetHouses _getHouses;
@@ -34,6 +39,8 @@ class HouseCubit extends Cubit<HouseState> {
   final AddUser _addUser;
   final Register _register;
   final UpdateHouse _updateHouse;
+  final AddSuggestion _addSuggestion;
+  final GetUserInFirestore _getUserInFirestore;
 
   void updateHouse(String uid, HouseRecordEntity house) async {
     await _updateHouse(uid, house);
@@ -43,9 +50,9 @@ class HouseCubit extends Cubit<HouseState> {
     await _addHouseData(house);
   }
 
-  void getHouses() async {
+  void getHouses(String phase) async {
     emit(Loading());
-    final houses = _getHouses();
+    final houses = _getHouses(phase);
     houses.listen((event) {
       if (event.isEmpty) {
         emit(Empty());
@@ -81,5 +88,14 @@ class HouseCubit extends Cubit<HouseState> {
 
   void register(String email, String password) async {
     await _register(email, password);
+  }
+
+  void addSuggestion(SuggestionEntity suggestion) async {
+    await _addSuggestion(suggestion);
+  }
+
+  Future<UserEntity> getUserInFirestore(String email) async {
+    final user = await _getUserInFirestore(email);
+    return user;
   }
 }

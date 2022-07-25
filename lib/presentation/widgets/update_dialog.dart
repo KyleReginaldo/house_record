@@ -30,27 +30,42 @@ class _AddDialogState extends State<UpdateDialog> {
   final amount = TextEditingController();
   final coveredMonth = TextEditingController();
   final address = TextEditingController();
+  final phase = TextEditingController();
+
   @override
   void initState() {
-    date.text = DateFormat('dd MMM yyyy, KK:mm a').format(DateTime.now());
+    date.text = DateFormat('dd/MMM/yyyy').format(DateTime.now());
     paymentNumber.text = widget.house.paymentNumber;
     owner.text = widget.house.ownerName;
     amount.text = widget.house.amount;
     coveredMonth.text = widget.house.coveredMonth;
     address.text = widget.house.address;
+    phase.text = widget.house.phase;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    date.dispose();
+    paymentNumber.dispose();
+    owner.dispose();
+    amount.dispose();
+    coveredMonth.dispose();
+    address.dispose();
+    phase.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      backgroundColor: color1,
+      backgroundColor: color2,
       title: const CustomText(
         'UPDATE RECORD',
-        letterSpacing: 2,
+        letterSpacing: 3,
         textAlign: TextAlign.center,
         size: 15,
-        color: color4,
+        color: color1,
         weight: FontWeight.w700,
       ),
       children: [
@@ -60,7 +75,7 @@ class _AddDialogState extends State<UpdateDialog> {
             'OR number',
             controller: paymentNumber,
             keyboard: TextInputType.number,
-            color: color4,
+            color: color1,
             radius: 0,
           ),
         ),
@@ -69,9 +84,25 @@ class _AddDialogState extends State<UpdateDialog> {
           child: CustomTextField(
             'date',
             controller: date,
-            defaultData: date.text,
-            color: color4,
+            color: color1,
             radius: 0,
+            suffix: IconButton(
+              onPressed: () async {
+                DateTime? datepicked = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime.now());
+                setState(() {
+                  date.text = DateFormat('dd MMM yyyy')
+                      .format(datepicked ?? DateTime.now());
+                });
+              },
+              icon: const Icon(
+                Icons.date_range_outlined,
+                color: color3,
+              ),
+            ),
           ),
         ),
         Padding(
@@ -79,7 +110,7 @@ class _AddDialogState extends State<UpdateDialog> {
           child: CustomTextField(
             'owner',
             controller: owner,
-            color: color4,
+            color: color1,
             radius: 0,
           ),
         ),
@@ -89,7 +120,7 @@ class _AddDialogState extends State<UpdateDialog> {
             'amount',
             controller: amount,
             keyboard: TextInputType.number,
-            color: color4,
+            color: color1,
             radius: 0,
           ),
         ),
@@ -98,7 +129,7 @@ class _AddDialogState extends State<UpdateDialog> {
           child: CustomTextField(
             'coveredMonth',
             controller: coveredMonth,
-            color: color4,
+            color: color1,
             radius: 0,
           ),
         ),
@@ -107,7 +138,16 @@ class _AddDialogState extends State<UpdateDialog> {
           child: CustomTextField(
             'address',
             controller: address,
-            color: color4,
+            color: color1,
+            radius: 0,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+          child: CustomTextField(
+            'phase',
+            controller: phase,
+            color: color1,
             radius: 0,
           ),
         ),
@@ -120,11 +160,12 @@ class _AddDialogState extends State<UpdateDialog> {
               },
               icon: const Icon(
                 Icons.cancel,
-                color: Colors.orange,
+                color: Colors.red,
+                size: 30,
               ),
             ),
             IconButton(
-              onPressed: () async {
+              onPressed: () {
                 final house = HouseRecordEntity(
                   paymentNumber: paymentNumber.text,
                   date: date.text,
@@ -132,15 +173,17 @@ class _AddDialogState extends State<UpdateDialog> {
                   amount: amount.text,
                   coveredMonth: coveredMonth.text,
                   address: address.text.toLowerCase(),
+                  phase: phase.text.toLowerCase(),
                 );
                 context.read<HouseCubit>().updateHouse(widget.uid, house);
-                context.read<HouseCubit>().getHouses();
+                context.read<HouseCubit>();
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
               icon: const Iconify(
                 Ic.sharp_add_task,
-                color: color3,
+                color: Colors.green,
+                size: 30,
               ),
             ),
           ],

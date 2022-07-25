@@ -1,15 +1,20 @@
+import 'package:house_record/data/datasource/local_data_source.dart';
 import 'package:house_record/data/datasource/remote_data_source.dart';
 import 'package:house_record/data/model/house_record_model.dart';
+import 'package:house_record/data/model/suggestion_model.dart';
 import 'package:house_record/data/model/user_model.dart';
 import 'package:house_record/domain/entity/house_record_entity.dart';
+import 'package:house_record/domain/entity/suggestion_entity.dart';
 import 'package:house_record/domain/entity/user_entity.dart';
 
 import '../../domain/repository/repository.dart';
 
 class RepositoryImpl implements Repository {
   final RemoteDataSource remote;
+  final LocalDataSource local;
   RepositoryImpl({
     required this.remote,
+    required this.local,
   });
   @override
   Future<void> addHouseData(HouseRecordEntity house) async {
@@ -17,11 +22,12 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Stream<List<HouseRecordEntity>> getHouses() {
+  Stream<List<HouseRecordEntity>> getHouses(String phase) {
     try {
-      final result = remote.getHouses();
+      final result = remote.getHouses(phase);
       return result;
-    } on Exception {
+    } on Exception catch (e) {
+      print(e);
       rethrow;
     }
   }
@@ -59,5 +65,15 @@ class RepositoryImpl implements Repository {
   @override
   Future<void> updateHouse(String uid, HouseRecordEntity house) async {
     await remote.updateHouse(uid, HouseRecordModel.fromEntity(house));
+  }
+
+  @override
+  Future<void> addSuggestion(SuggestionEntity suggestion) async {
+    await local.addSuggestion(SuggestionModel.fromEntity(suggestion));
+  }
+
+  @override
+  Future<UserEntity> getUserInFirestore(String email) async {
+    return await remote.getUserInFirestore(email);
   }
 }

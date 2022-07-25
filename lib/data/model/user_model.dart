@@ -1,35 +1,37 @@
 import '../../domain/entity/user_entity.dart';
 
-class UserModel {
-  String uid;
+class UserModel extends UserEntity {
+  @override
   final String email;
+  @override
   final String password;
-  final bool isAdmin;
+  @override
+  final String role;
   UserModel({
-    this.uid = '',
     required this.email,
     required this.password,
-    required this.isAdmin,
-  });
+    required this.role,
+  }) : super(
+          email: email,
+          password: password,
+          role: role,
+        );
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      uid: map['uid'] ?? "",
-      email: map['email'] ?? "",
-      password: map['password'] ?? '',
-      isAdmin: map['isAdmin'] ?? false,
-    );
+        email: map['email'] ?? "",
+        password: map['password'] ?? '',
+        role: map['role']);
   }
   factory UserModel.fromEntity(UserEntity user) {
     return UserModel(
-        uid: user.uid,
-        email: user.email,
-        password: user.password,
-        isAdmin: user.isAdmin);
+      email: user.email,
+      password: user.password,
+      role: user.role,
+    );
   }
   Map<String, dynamic> toMap() => {
-        'uid': uid,
         'email': email,
         'password': password,
-        'isAdmin': isAdmin,
+        'role': role,
       };
 }
