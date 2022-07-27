@@ -76,4 +76,19 @@ class RepositoryImpl implements Repository {
   Future<UserEntity> getUserInFirestore(String email) async {
     return await remote.getUserInFirestore(email);
   }
+
+  @override
+  Stream<List<UserEntity>> getUserAccounts() {
+    try {
+      final result = remote.getUserAccounts();
+      return result;
+    } on Exception {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> createUserAccount(UserEntity user) async {
+    await remote.createUserAccount(UserModel.fromEntity(user));
+  }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:general/general.dart';
-import 'package:house_record/presentation/cubit/getrole_cubit.dart';
+import 'package:house_record/presentation/cubit/getrolecubit/getrole_cubit.dart';
+import 'package:house_record/presentation/widgets/drawer.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/teenyicons.dart';
 
-import 'package:house_record/presentation/cubit/house_cubit.dart';
+import 'package:house_record/presentation/cubit/house/house_cubit.dart';
 import 'package:house_record/presentation/screens/searchscreen.dart';
 import 'package:house_record/presentation/screens/houselist_screen.dart';
 
@@ -36,9 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
           color: color1,
         ),
         elevation: 0,
-        leading: Image.asset(
-          'assets/logo.png',
-        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -52,17 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             icon: const Iconify(
               Teenyicons.search_property_outline,
-              color: color3,
-            ),
-          ),
-          IconButton(
-            onPressed: () async {
-              context.read<HouseCubit>().logOut();
-              // context.read<HouseCubit>().logOut();
-            },
-            icon: const Icon(
-              Icons.logout_outlined,
-              color: color3,
+              color: color1,
             ),
           ),
         ],
@@ -77,8 +65,16 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BlocProvider<HouseCubit>(
-                  create: (context) => sl<HouseCubit>()..getHouses('phase 1'),
+                builder: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider<HouseCubit>(
+                      create: (context) =>
+                          sl<HouseCubit>()..getHouses('phase 1'),
+                    ),
+                    BlocProvider<GetRoleCubit>(
+                      create: (context) => sl<GetRoleCubit>(),
+                    ),
+                  ],
                   child: const HouseListScreen(),
                 ),
               ),
@@ -90,16 +86,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 image: const DecorationImage(
                   image: AssetImage('assets/phase1.jpg'),
                   fit: BoxFit.cover,
-                  opacity: 0.8,
+                  opacity: 0.4,
                 ),
               ),
               child: const Center(
-                child: CustomText(
+                child: CustomBtnText(
                   'PHASE 1',
                   weight: FontWeight.bold,
                   letterSpacing: 5,
                   size: 20,
-                  color: color2,
+                  color: color1,
                 ),
               ),
             ),
@@ -108,29 +104,39 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BlocProvider<HouseCubit>(
-                  create: (context) => sl<HouseCubit>()..getHouses('phase 2'),
+                builder: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider<HouseCubit>(
+                      create: (context) =>
+                          sl<HouseCubit>()..getHouses('phase 2a,(joan)'),
+                    ),
+                    BlocProvider<GetRoleCubit>(
+                      create: (context) => sl<GetRoleCubit>(),
+                    ),
+                  ],
                   child: const HouseListScreen(),
                 ),
               ),
             ),
             child: Container(
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: color3,
                 borderRadius: BorderRadius.circular(8),
                 image: const DecorationImage(
                   image: AssetImage('assets/phase2.jpg'),
                   fit: BoxFit.cover,
-                  opacity: 0.8,
+                  opacity: 0.4,
                 ),
               ),
               child: const Center(
-                child: CustomText(
-                  'PHASE 2',
+                child: CustomBtnText(
+                  'PHASE 2a(1-47)',
                   weight: FontWeight.bold,
                   letterSpacing: 5,
                   size: 20,
-                  color: color2,
+                  textAlign: TextAlign.center,
+                  color: color1,
                 ),
               ),
             ),
@@ -139,29 +145,39 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BlocProvider<HouseCubit>(
-                  create: (context) => sl<HouseCubit>()..getHouses('phase 2a'),
+                builder: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider<HouseCubit>(
+                      create: (context) => sl<HouseCubit>()
+                        ..getHouses('phase 2a,(sarahmostajo)'),
+                    ),
+                    BlocProvider<GetRoleCubit>(
+                      create: (context) => sl<GetRoleCubit>(),
+                    ),
+                  ],
                   child: const HouseListScreen(),
                 ),
               ),
             ),
             child: Container(
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: color3,
                 borderRadius: BorderRadius.circular(8),
                 image: const DecorationImage(
                   image: AssetImage('assets/phase2a.jpg'),
                   fit: BoxFit.cover,
-                  opacity: 0.8,
+                  opacity: 0.4,
                 ),
               ),
               child: const Center(
-                child: CustomText(
-                  'PHASE 2a',
+                child: CustomBtnText(
+                  'PHASE 2a(48-87)',
                   weight: FontWeight.bold,
                   letterSpacing: 5,
                   size: 20,
-                  color: color2,
+                  color: color1,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
@@ -170,8 +186,16 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => BlocProvider<HouseCubit>(
-                  create: (context) => sl<HouseCubit>()..getHouses('phase 2b'),
+                builder: (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider<HouseCubit>(
+                      create: (context) =>
+                          sl<HouseCubit>()..getHouses('phase 2b'),
+                    ),
+                    BlocProvider<GetRoleCubit>(
+                      create: (context) => sl<GetRoleCubit>(),
+                    ),
+                  ],
                   child: const HouseListScreen(),
                 ),
               ),
@@ -183,16 +207,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 image: const DecorationImage(
                   image: AssetImage('assets/phase2b.jpg'),
                   fit: BoxFit.cover,
-                  opacity: 0.8,
+                  opacity: 0.4,
                 ),
               ),
               child: const Center(
-                child: CustomText(
+                child: CustomBtnText(
                   'PHASE 2b',
                   weight: FontWeight.bold,
                   letterSpacing: 5,
                   size: 20,
-                  color: color2,
+                  color: color1,
                 ),
               ),
             ),
@@ -201,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: BlocBuilder<GetRoleCubit, UserState>(
         builder: (context, state) {
-          if (state is Admin) {
+          if (state is SuperAdmin) {
             return FloatingActionButton(
               backgroundColor: color1,
               onPressed: () {
@@ -209,7 +233,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   context: context,
                   builder: (context) => BlocProvider<HouseCubit>(
                     create: (context) => sl<HouseCubit>(),
-                    child: const AddDialog(),
+                    child: AddDialog(
+                      username: state.user.username,
+                    ),
+                  ),
+                );
+              },
+              tooltip: 'Add Record',
+              splashColor: color1,
+              child: const Icon(
+                Icons.add_home_outlined,
+                color: color3,
+                size: 35,
+              ),
+            );
+          } else if (state is Admin) {
+            return FloatingActionButton(
+              backgroundColor: color1,
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => BlocProvider<HouseCubit>(
+                    create: (context) => sl<HouseCubit>(),
+                    child: AddDialog(
+                      username: state.user.username,
+                    ),
                   ),
                 );
               },
@@ -226,6 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
       ),
+      drawer: const MyDrawer(),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -6,7 +7,8 @@ import 'package:general/general.dart';
 import 'package:house_record/core/theme/colors.dart';
 import 'package:house_record/core/utils/suggestion_filter.dart';
 import 'package:house_record/domain/entity/suggestion_entity.dart';
-import 'package:house_record/presentation/cubit/house_cubit.dart';
+import 'package:house_record/presentation/cubit/getrolecubit/getrole_cubit.dart';
+import 'package:house_record/presentation/cubit/house/house_cubit.dart';
 import 'package:house_record/presentation/screens/detailscreen.dart';
 
 import '../../data/model/suggestion_model.dart';
@@ -40,7 +42,7 @@ class _SearchScreenState extends State<SearchScreen> {
             },
             icon: const Icon(
               Icons.arrow_back_ios_rounded,
-              color: color3,
+              color: color1,
             ),
           ),
           title: TypeAheadFormField<SuggestionModel>(
@@ -98,7 +100,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         .read<HouseCubit>()
                         .searchPayment(searchController.text);
                   },
-                  icon: const Icon(Icons.search),
+                  icon: const Icon(
+                    Icons.search,
+                    color: color1,
+                  ),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(0),
@@ -152,48 +157,92 @@ class _SearchScreenState extends State<SearchScreen> {
         body: BlocBuilder<HouseCubit, HouseState>(
           builder: (context, state) {
             if (state is Loaded) {
-              return Column(
-                children: state.houses.map((house) {
-                  return Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: ListTile(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BlocProvider<HouseCubit>(
-                                      create: (context) => sl<HouseCubit>(),
-                                      child: DetailScreen(
-                                        record: house,
-                                        uid: house.uid,
-                                      ),
-                                    )));
-                      },
-                      tileColor: color1,
-                      textColor: color3,
-                      title: CustomText(house.ownerName),
-                      subtitle: CustomText(house.address),
-                      trailing: CustomText(
-                        house.phase,
+              return Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: CustomBtnText(
+                        'results: ${state.houses.length.toString()}',
+                        color: color1,
                       ),
                     ),
-                  );
-                }).toList(),
+                    Column(
+                      children: state.houses.map((house) {
+                        return Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: ListTile(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MultiBlocProvider(
+                                            providers: [
+                                              BlocProvider<HouseCubit>(
+                                                create: (context) =>
+                                                    sl<HouseCubit>(),
+                                              ),
+                                              BlocProvider<GetRoleCubit>(
+                                                create: (context) =>
+                                                    sl<GetRoleCubit>()
+                                                      ..getUserInFirestore(
+                                                          FirebaseAuth
+                                                                  .instance
+                                                                  .currentUser
+                                                                  ?.email ??
+                                                              'na'),
+                                              ),
+                                            ],
+                                            child: DetailScreen(
+                                              record: house,
+                                              uid: house.uid,
+                                            ),
+                                          )));
+                            },
+                            selectedColor: color1,
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(color: color1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            tileColor: color3,
+                            textColor: color1,
+                            title: CustomText(house.ownerName),
+                            subtitle: CustomText(house.address),
+                            trailing: CustomText(
+                              house.phase,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
               );
             } else if (state is Loading) {
-              return const LinearProgressIndicator();
+              return const LinearProgressIndicator(
+                color: color1,
+              );
             } else if (state is Empty) {
-              return const Align(
+              return Align(
                 alignment: Alignment.center,
                 child: CustomText(
-                  'NO RESULT',
-                  color: Colors.grey,
+                  state.msg,
+                  color: color1,
                   size: 25,
                   letterSpacing: 4,
                 ),
               );
             }
-            return const SizedBox.shrink();
+            return const Align(
+              alignment: Alignment.center,
+              child: CustomText(
+                'Search something',
+                color: color1,
+                size: 25,
+                letterSpacing: 4,
+              ),
+            );
           },
         ));
   }

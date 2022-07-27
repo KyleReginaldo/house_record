@@ -12,8 +12,11 @@ class GetRoleCubit extends Cubit<UserState> {
   ) : super(UserInitial());
   final GetUserInFirestore _getUserInFirestore;
   void getUserInFirestore(String email) async {
+    emit(UserLoading());
     final user = await _getUserInFirestore(email);
     if (user.role == 'superadmin') {
+      emit(SuperAdmin(user: user));
+    } else if (user.role == 'admin') {
       emit(Admin(user: user));
     } else if (user.role == 'user') {
       emit(FirestoreUser(user: user));

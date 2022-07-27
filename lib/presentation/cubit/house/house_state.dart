@@ -16,4 +16,9 @@ class Loading extends HouseState {}
 
 class Error extends HouseState {}
 
-class Empty extends HouseState {}
+class Empty extends HouseState {
+  final String msg;
+  Empty(
+    this.msg,
+  );
+}

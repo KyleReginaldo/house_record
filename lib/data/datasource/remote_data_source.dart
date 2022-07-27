@@ -13,6 +13,8 @@ abstract class RemoteDataSource {
   Future<void> register(String email, String password);
   Future<void> updateHouse(String uid, HouseRecordModel house);
   Future<UserModel> getUserInFirestore(String email);
+  Stream<List<UserModel>> getUserAccounts();
+  Future<void> createUserAccount(UserModel user);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -81,5 +83,23 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         await FirebaseFirestore.instance.collection('users').doc(email).get();
 
     return UserModel.fromMap(userDoc.data() ?? {'': ''});
+  }
+
+  @override
+  Stream<List<UserModel>> getUserAccounts() {
+    return FirebaseFirestore.instance.collection('users').snapshots().map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => UserModel.fromMap(doc.data())).toList());
+  }
+
+  @override
+  Future<void> createUserAccount(UserModel user) async {
+    final currentUser = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+            email: user.email, password: user.password);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUser.user?.email ?? 'na')
+        .set(user.toMap());
   }
 }

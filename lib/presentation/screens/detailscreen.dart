@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:general/general.dart';
-import 'package:intl/intl.dart';
+import 'package:house_record/presentation/cubit/getrolecubit/getrole_cubit.dart';
 
 import 'package:house_record/core/theme/colors.dart';
+import 'package:intl/intl.dart';
 
 import '../../core/utils/helper_widget.dart';
 import '../../dependency.dart';
 import '../../domain/entity/house_record_entity.dart';
-import '../cubit/house_cubit.dart';
+import '../cubit/house/house_cubit.dart';
 import '../widgets/update_dialog.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -23,201 +24,594 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color1,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: color3,
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_rounded,
+              color: color1,
+            ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: const CustomText(
+            'RECORD DETAIL',
+            letterSpacing: 2,
+            color: color1,
+          ),
+          centerTitle: true,
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const CustomText(
-          'RECORD DETAIL',
-          letterSpacing: 2,
-          color: color3,
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: CustomText(
-                  record.ownerName.toUpperCase(),
-                  weight: FontWeight.bold,
-                  color: color3,
-                  size: 20,
-                ),
-              ),
-              addVerticalSpace(16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CustomText(
-                    'payment number',
-                    color: color3,
-                  ),
-                  CustomText(
-                    record.paymentNumber,
-                    color: color3,
-                  ),
-                ],
-              ),
-              addVerticalSpace(16),
-              const HDivider(
-                splitter: 40,
-                isDot: true,
-                color: color3,
-              ),
-              addVerticalSpace(16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CustomText(
-                    'amount',
-                    color: color3,
-                  ),
-                  CustomText(
-                    NumberFormat.currency(
-                            locale: 'fil', symbol: '₱', decimalDigits: 2)
-                        .format(
-                      double.parse(record.amount),
-                    ),
-                    color: color3,
-                  ),
-                ],
-              ),
-              addVerticalSpace(16),
-              const HDivider(
-                splitter: 40,
-                isDot: true,
-                color: color3,
-              ),
-              addVerticalSpace(16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CustomText(
-                    'address',
-                    color: color3,
-                  ),
-                  CustomText(
-                    record.address.toUpperCase(),
-                    color: color3,
-                  ),
-                ],
-              ),
-              addVerticalSpace(16),
-              const HDivider(
-                splitter: 40,
-                isDot: true,
-                color: color3,
-              ),
-              addVerticalSpace(16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CustomText(
-                    'covered month',
-                    color: color3,
-                  ),
-                  CustomText(
-                    record.coveredMonth.toUpperCase(),
-                    color: color3,
-                  ),
-                ],
-              ),
-              addVerticalSpace(16),
-              const HDivider(
-                splitter: 40,
-                isDot: true,
-                color: color3,
-              ),
-              addVerticalSpace(16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CustomText(
-                    'date',
-                    color: color3,
-                  ),
-                  CustomText(
-                    record.date,
-                    color: color3,
-                  ),
-                ],
-              ),
-              addVerticalSpace(16),
-              const HDivider(
-                splitter: 40,
-                isDot: true,
-                color: color3,
-              ),
-              addVerticalSpace(16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CustomText(
-                    'phase',
-                    color: color3,
-                  ),
-                  CustomText(
-                    record.phase,
-                    color: color3,
-                  ),
-                ],
-              ),
-              addVerticalSpace(16),
-              const HDivider(
-                splitter: 40,
-                isDot: true,
-                color: color3,
-              ),
-              addVerticalSpace(16),
-              Align(
-                alignment: Alignment.center,
-                child: GestureDetector(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) => BlocProvider<HouseCubit>(
-                              create: (context) => sl<HouseCubit>(),
-                              child: UpdateDialog(
-                                uid: uid,
-                                house: record,
-                              ),
-                            ));
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: color1,
-                      border: Border.all(color: color3, width: 1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 40),
-                      child: CustomBtnText(
-                        'Update',
-                        color: color3,
+        body: BlocBuilder<GetRoleCubit, UserState>(
+          builder: (context, state) {
+            if (state is SuperAdmin) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: CustomText(
+                          record.ownerName.toUpperCase(),
+                          weight: FontWeight.bold,
+                          color: color1,
+                          size: 20,
+                        ),
                       ),
-                    ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'payment number',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.paymentNumber,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'amount',
+                            color: color1,
+                          ),
+                          CustomText(
+                            NumberFormat.currency(
+                                    locale: 'fil',
+                                    symbol: '₱',
+                                    decimalDigits: 2)
+                                .format(
+                              double.parse(record.amount),
+                            ),
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'address',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.address.toUpperCase(),
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'covered month',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.coveredMonth.toUpperCase(),
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'date',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.date,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'phase',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.phase.split(',').first,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'added by',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.manager,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Align(
+                        alignment: Alignment.center,
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => BlocProvider<HouseCubit>(
+                                      create: (context) => sl<HouseCubit>(),
+                                      child: UpdateDialog(
+                                        uid: uid,
+                                        house: record,
+                                        username: state.user.username,
+                                      ),
+                                    ));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: color3,
+                              border: Border.all(color: color1, width: 1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 40),
+                              child: CustomBtnText(
+                                'Update',
+                                color: color1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+              );
+            } else if (state is Admin) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: CustomText(
+                          record.ownerName.toUpperCase(),
+                          weight: FontWeight.bold,
+                          color: color1,
+                          size: 20,
+                        ),
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'payment number',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.paymentNumber,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'amount',
+                            color: color1,
+                          ),
+                          CustomText(
+                            NumberFormat.currency(
+                                    locale: 'fil',
+                                    symbol: '₱',
+                                    decimalDigits: 2)
+                                .format(
+                              double.parse(record.amount),
+                            ),
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'address',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.address.toUpperCase(),
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'covered month',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.coveredMonth.toUpperCase(),
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'date',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.date,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'phase',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.phase.split(',').first,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'added by',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.manager,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Align(
+                        alignment: Alignment.center,
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => BlocProvider<HouseCubit>(
+                                      create: (context) => sl<HouseCubit>(),
+                                      child: UpdateDialog(
+                                        uid: uid,
+                                        house: record,
+                                        username: state.user.username,
+                                      ),
+                                    ));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: color3,
+                              border: Border.all(color: color1, width: 1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 40),
+                              child: CustomBtnText(
+                                'Update',
+                                color: color1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else if (state is FirestoreUser) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: CustomText(
+                          record.ownerName.toUpperCase(),
+                          weight: FontWeight.bold,
+                          color: color1,
+                          size: 20,
+                        ),
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'payment number',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.paymentNumber,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'amount',
+                            color: color1,
+                          ),
+                          CustomText(
+                            NumberFormat.currency(
+                                    locale: 'fil',
+                                    symbol: '₱',
+                                    decimalDigits: 2)
+                                .format(
+                              double.parse(record.amount),
+                            ),
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'address',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.address.toUpperCase(),
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'covered month',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.coveredMonth.toUpperCase(),
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'date',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.date,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'phase',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.phase.split(',').first,
+                            color: color1,
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(16),
+                      const HDivider(
+                        splitter: 40,
+                        isDot: true,
+                        color: color1,
+                      ),
+                      addVerticalSpace(16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const CustomText(
+                            'added by',
+                            color: color1,
+                          ),
+                          CustomText(
+                            record.manager,
+                            color: color1,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            } else if (state is UserLoading) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: color1,
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ));
   }
 }

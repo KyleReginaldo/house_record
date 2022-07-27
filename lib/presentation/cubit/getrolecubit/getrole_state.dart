@@ -5,12 +5,21 @@ abstract class UserState {}
 
 class UserInitial extends UserState {}
 
+class SuperAdmin extends UserState {
+  final UserEntity user;
+  SuperAdmin({
+    required this.user,
+  });
+}
+
 class Admin extends UserState {
   final UserEntity user;
   Admin({
     required this.user,
   });
 }
+
+class UserLoading extends UserState {}
 
 class FirestoreUser extends UserState {
   final UserEntity user;

@@ -55,7 +55,7 @@ class HouseCubit extends Cubit<HouseState> {
     final houses = _getHouses(phase);
     houses.listen((event) {
       if (event.isEmpty) {
-        emit(Empty());
+        emit(Empty('Empty'));
       } else {
         emit(Loaded(houses: event));
       }
@@ -67,7 +67,7 @@ class HouseCubit extends Cubit<HouseState> {
     final houses = _searchPayment(address);
     houses.listen((houses) {
       if (houses.isEmpty) {
-        emit(Empty());
+        emit(Empty('No Results'));
       } else {
         emit(Loaded(houses: houses));
       }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:general/general.dart';
@@ -8,13 +9,15 @@ import 'package:intl/intl.dart';
 import 'package:house_record/core/theme/colors.dart';
 
 import '../../domain/entity/house_record_entity.dart';
-import '../cubit/house_cubit.dart';
+import '../cubit/house/house_cubit.dart';
 
 class UpdateDialog extends StatefulWidget {
+  final String username;
   final String uid;
   final HouseRecordEntity house;
   const UpdateDialog({
     Key? key,
+    required this.username,
     required this.uid,
     required this.house,
   }) : super(key: key);
@@ -40,7 +43,7 @@ class _AddDialogState extends State<UpdateDialog> {
     amount.text = widget.house.amount;
     coveredMonth.text = widget.house.coveredMonth;
     address.text = widget.house.address;
-    phase.text = widget.house.phase;
+    phase.text = widget.house.phase.split(',').first;
     super.initState();
   }
 
@@ -149,6 +152,7 @@ class _AddDialogState extends State<UpdateDialog> {
             controller: phase,
             color: color1,
             radius: 0,
+            defaultData: phase.text,
           ),
         ),
         Row(
@@ -173,7 +177,10 @@ class _AddDialogState extends State<UpdateDialog> {
                   amount: amount.text,
                   coveredMonth: coveredMonth.text,
                   address: address.text.toLowerCase(),
-                  phase: phase.text.toLowerCase(),
+                  phase: phase.text.contains('2a')
+                      ? '${phase.text.toLowerCase()},(${widget.username})'
+                      : phase.text.toLowerCase(),
+                  manager: FirebaseAuth.instance.currentUser?.email ?? '',
                 );
                 context.read<HouseCubit>().updateHouse(widget.uid, house);
                 context.read<HouseCubit>();

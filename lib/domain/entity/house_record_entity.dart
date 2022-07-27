@@ -7,6 +7,7 @@ class HouseRecordEntity {
   final String coveredMonth;
   final String address;
   final String phase;
+  final String manager;
   HouseRecordEntity({
     this.uid = '',
     required this.paymentNumber,
@@ -16,5 +17,6 @@ class HouseRecordEntity {
     required this.coveredMonth,
     required this.address,
     required this.phase,
+    required this.manager,
   });
 }

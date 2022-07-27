@@ -13,4 +13,6 @@ abstract class Repository {
   Future<void> updateHouse(String uid, HouseRecordEntity house);
   Future<void> addSuggestion(SuggestionEntity suggestion);
   Future<UserEntity> getUserInFirestore(String email);
+  Stream<List<UserEntity>> getUserAccounts();
+  Future<void> createUserAccount(UserEntity user);
 }

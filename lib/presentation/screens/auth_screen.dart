@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:house_record/presentation/cubit/house_cubit.dart';
+import 'package:house_record/presentation/cubit/getusercubit/getuser_cubit.dart';
+import 'package:house_record/presentation/cubit/house/house_cubit.dart';
 import 'package:house_record/presentation/screens/homescreen.dart';
 import 'package:house_record/presentation/screens/login_screen.dart';
 
 import '../../dependency.dart';
-import '../cubit/getrole_cubit.dart';
+import '../cubit/getrolecubit/getrole_cubit.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -28,9 +29,14 @@ class AuthScreen extends StatelessWidget {
                 create: (context) =>
                     sl<GetRoleCubit>()..getUserInFirestore(user.email!),
               ),
+              BlocProvider<GetuserCubit>(
+                create: (context) => sl<GetuserCubit>(),
+              ),
             ],
             child: const HomeScreen(),
           );
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LinearProgressIndicator();
         } else {
           return const LogInScreen();
         }
